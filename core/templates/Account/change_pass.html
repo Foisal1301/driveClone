@@ -1,0 +1,54 @@
+{% extends 'Account/base.html' %}
+{% block title %}Change Password{% endblock %}
+{% block content %}
+<div class="shadow-lg p-4 mb-5 bg-body rounded">
+    <form method="post" action=".">
+        {% csrf_token %}
+        <center><h1>Change Password</h1></center><br/>
+        <div class="form-floating">
+            <input required name='old_password' type="password" class="form-control" id="floatingOldPassword" placeholder="Old Password">
+            <label for="floatingOldPassword">Old Password</label>
+        </div><br/>
+        <div class="form-floating">
+            <input required name='new_password1' type="password" class="form-control" id="floatingNewPassword1" placeholder="New Password">
+            <label for="floatingNewPassword1">New Password</label>
+            <ul>
+                <li>Your password can’t be too similar to your other personal information.</li>
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be a commonly used password.</li>
+                <li>Your password can’t be entirely numeric.</li>
+            </ul>
+        </div><br/>
+        <div class="form-floating">
+            <input required name='new_password2' type="password" class="form-control" id="floatingNewPassword2" placeholder="Repeat New Password">
+            <label for="floatingNewPassword2">Repeat New Password</label>
+            <p>Enter the same password as before, for verification.</p>
+        </div>
+        <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" onclick="showPassword();" value="show-password text-light"> Show Password
+            </label>
+        </div>
+        <p>Do you have an account? <a href="/login/">Login</a></p>
+        <button id="submit" class='btn btn-success container-fluid' type='submit'>Sign in</button>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function showPassword(){
+        var p1 = document.getElementById('floatingNewPassword1');
+        var p2 = document.getElementById('floatingNewPassword2');
+        var p3 = document.getElementById('floatingOldPassword');
+        if (p1.type === 'password' && p2.type === 'password' && p3.type === 'password'){
+            p1.type = 'text';
+            p2.type = 'text';
+            p3.type = 'text';
+        }else{
+            p1.type = 'password';
+            p2.type = 'password';
+            p3.type = 'password';
+        }
+    }
+</script>
+{% endblock %}

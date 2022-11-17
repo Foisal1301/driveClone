@@ -1,0 +1,55 @@
+{% extends 'Account/base.html' %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<div class="shadow-lg p-4 mb-5 bg-body rounded">
+    <form method="post" action=".">
+        {% csrf_token %}
+        <center><h1>Sign Up</h1></center><br/>
+        <div class="form-floating mb-3">
+            <input maxlength="150" autofocus required name='username' type="username" class="form-control" id="floatingInput" placeholder="Username">
+            <label for="floatingInput">Username</label>
+            <ul>
+                <li>150 characters or fewer. Letters, digits and @/./+/-/_ only.</li>
+                <li>Can not be same with other user</li>
+            </ul>
+        </div><br/>
+        <div class="form-floating">
+            <input required name='password1' type="password" class="form-control" id="floatingPassword1" placeholder="Password">
+            <label for="floatingPassword1">Password</label>
+            <ul>
+                <li>Your password can’t be too similar to your other personal information.</li>
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be a commonly used password.</li>
+                <li>Your password can’t be entirely numeric.</li>
+            </ul>
+        </div><br/>
+        <div class="form-floating">
+            <input required name='password2' type="password" class="form-control" id="floatingPassword2" placeholder="Repeat Password">
+            <label for="floatingPassword2">Repeat Password</label>
+            <p>Enter the same password as before, for verification.</p>
+        </div>
+        <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" onclick="showPassword();" value="show-password text-light"> Show Password
+            </label>
+        </div>
+        <p>Do you have an account? <a href="/login/">Login</a></p>
+        <button id="submit" class='btn btn-success container-fluid' type='submit'>Sign in</button>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function showPassword(){
+        var p1 = document.getElementById('floatingPassword1');
+        var p2 = document.getElementById('floatingPassword2');
+        if (p1.type === 'password' && p2.type === 'password'){
+            p1.type = 'text';
+            p2.type = 'text';
+        }else{
+            p1.type = 'password';
+            p2.type = 'password';
+        }
+    }
+</script>
+{% endblock %}
