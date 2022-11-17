@@ -1,0 +1,7 @@
+1)mount /dev/sda1 /boot/efi
+2)pacman -S grub efibootmgr dosfstools mtools
+3)nano /etc/default/grub
+4)pacman -S os-prober
+5)grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+6)grub-mkconfig -o /boot/grub/grub.cfg
+

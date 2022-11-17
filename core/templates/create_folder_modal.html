@@ -1,0 +1,23 @@
+<div class="modal fade" id="create-folder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Folder</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="/create_folder/">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-floating mb-3">
+                    <input required type="text" class="form-control" id="name" placeholder="Name" name="name">
+                    <label for="name">Name</label>
+                </div>
+                <input type="hidden" name="parent" value="{{ folder }}">
+            </div>
+            <div class="modal-footer">
+            <input class="btn btn-success" type="submit" placeholder='Create' href="#"/>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>

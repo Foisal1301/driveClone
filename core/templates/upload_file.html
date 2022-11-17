@@ -1,0 +1,22 @@
+<div class="modal fade" id="uploadFile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Upload File</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" enctype="multipart/form-data" action="/upload_file/{% if request.resolver_match.url_name != "home" %}{{ folder.pk }}/{% endif %}">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="id_file" class="form-label">Upload Your file</label>
+                    <input class="form-control" required type="file" id="id_file" name="file">
+                </div>
+            </div>
+            <div class="modal-footer">
+            <input class="btn btn-success" type="submit" placeholder='Upload' href="#"/>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
