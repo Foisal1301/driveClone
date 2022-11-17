@@ -1,0 +1,1 @@
+web: gunicorn driveClone.wsgi --log-file -
