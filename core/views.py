@@ -125,25 +125,26 @@ def delete_folder(request,pk):
         messages.error(request,'You are not allowed!')
         return redirect('home')
 
-@login_required
 def folder(request,pk):
-    folder = Folder.objects.get(pk=pk,user=request.user)
-    folders = Folder.objects.filter(user=request.user,parent=folder.name)
-    files = File.objects.filter(user=request.user,parent=folder)
-    homepage = True
-    parent = None
-    if folder.parent != None:
-        homepage = False
-        parent = Folder.objects.get(user=request.user,name=folder.parent)
-    all = set(chain(folders,files))
-    return render(request,'folder.html',{
-        'homepage':homepage,
-        'parent':parent,
+    folder = Folder.objects.get(pk=pk,)
+    folders = Folder.objects.filter(user=folder.user,parent=folder.name)
+    files = File.objects.filter(user=folder.user,parent=folder)
+    al = set(chain(folders,files))
+    dictionary = {
         'folder':folder,
         'folders':folders,
         'files':files,
-        'all':all,
-    })
+        'all':al,
+    }
+    if folder.user == request.user:
+        homepage = True
+        parent = None
+        if folder.parent != None:
+            homepage = False
+            parent = Folder.objects.get(user=request.user,name=folder.parent)
+        dictionary['homepage'] = homepage
+        dictionary['parent'] = parent
+    return render(request,'folder.html',dictionary)
 
 @login_required
 def create_folder(request):

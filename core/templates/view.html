@@ -1,26 +1,23 @@
 {% extends 'Account/base.html' %}
 {% block title %}{{ folder.name }}{% endblock %}
 {% block content %}
-{% if folder.user == user %}
 {% include 'create_folder_modal.html' %}
 {% include 'upload_file.html' %}
 <div class="flex">
     <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#create-folder">Create Folder</a>
     <a href="" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadFile">Upload File</a>
 </div><br/>
-{% endif %}
 <div class="row">
-    <center><h1>{{ folder.name }}</h1>
-    {% if folder.user != user %}<small>Shared by <b>{{ folder.user }}</b></small>{% endif %}</center><br/>
     <div class="card" style="border-radius: 1rem;background-color: rgba(240, 240, 240, 0.5);">
         <div class="card-body">
             <table class="table">
-                <tbody>{% if folder.user == user %}
+            
+                <tbody>
                     <td><a style='text-decoration: none;' {% if homepage %}href="{% url 'home' %}"{% else %}href='{% url 'folder' parent.pk %}'{% endif %}>
                         <svg style='margin-right: 0.5rem;' xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder-fill" viewBox="0 0 16 16">
                             <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"/>
                         </svg>..
-                    </td><td align="right"></td>{% endif %}
+                    </td>
                 {% if all %}
                 {% for item in all %}
                     <tr>
@@ -31,19 +28,19 @@
                               </svg>
                             {{ item.name }}
                         </td>
-                        <td align="right">{% if folder.user == user %}
-                            <a href="{% url 'del-folder' item.id %}" class="btn btn-danger">Delete</a>{% endif %}
+                        <td align="right">
+                            <a href="{% url 'del-folder' item.id %}" class="btn btn-danger">Delete</a>
                         </td></a>
                         {% else %}
-                        <td><a style='text-decoration: none;' href="{{ item.file.url }}">
+                        <td>
                             <svg style='margin-right: 0.5rem;' xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
                                 <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
                               </svg>
-                            {{ item.name }}</a>
+                            {{ item.name }}
                         </td>
                         <td align="right">
                             <a href="{{ item.file.url }}" download="item.file" style="margin-right: 0.001rem;" class="btn btn-success">Download</a>
-                            {% if folder.user == user %}<a href="{% url 'del-file' item.id %}" class="btn btn-danger">Delete</a>{% endif %}
+                            <a href="{% url 'del-file' item.id %}" class="btn btn-danger">Delete</a>
                         </td>
                         {% endif %}
                     </tr>
