@@ -1,0 +1,10 @@
+{% extends 'Account/base.html' %}
+{% block title %}500 Server Error{% endblock %}
+{% block content %}
+<div class="shadow-lg p-4 mb-5 bg-body rounded">
+    <h1>Internel Server Error</h1>
+    <p>Ooops ! Something went wrong !</p>
+    <p>Try to refresh this page or feel free to contact us if the problem persists.</p>
+    <hr><a class='btn btn-success' href="{% url 'home' %}">Go to home</a>
+</div>
+{% endblock %}

@@ -13,33 +13,28 @@ from .forms import FileUploadForm,SignUpForm,PrivacyForm,ChangePass
 def privacy_settings(request):
     if request.method == 'POST':
         form = PrivacyForm(request.POST or None,instance=request.user)
+        username = request.POST['username']
         if form.is_valid():
             form.save()
             messages.success(request,'Username has changed successfully!')
             return redirect('home')
-        else:
-            messages.error(request,'Username already exists')
-            return redirect('privacy-settings')
-    return render(request,'Account/privacy_settings.html',{})
+    else:
+        form = PrivacyForm()
+    return render(request,'Account/privacy_settings.html',{'form':form})
 
 @login_required
 def change_pass(request):
     if request.method == 'POST':
         form = ChangePass(request.user,request.POST)
-        old_pass = request.POST['old_password']
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request,user)
             messages.success(request,"Password has been changed successfully!")
             return redirect('home')
 
-        else:
-            if request.user != authenticate(username=request.user.username,password=old_pass):
-                messages.error(request,'Old password is incorrect!')
-            else:
-                messages.error(request,'New password is invalid!')
-            return redirect('change-password')
-    return render(request,'Account/change_pass.html',{})
+    else:
+        form = ChangePass(request.user)
+    return render(request,'Account/change_pass.html',{'form':form})
 
 def signup(request):
     if request.user.is_authenticated:
@@ -55,15 +50,9 @@ def signup(request):
                 login(request,user)
                 messages.success(request,'Account is created Successfully!')
                 return redirect('home')
-            else:
-                if User.objects.filter(username=username):
-                    messages.error(request,'This user already exists!')
-                else:
-                    messages.error(request,'Something went wrong,try again!')
-                return redirect('signup')
-
         else:
-            return render(request,'Account/signup.html',{})
+            form = SignUpForm()
+        return render(request,'Account/signup.html',{'form':form})
 
 def signin(request):
     if request.user.is_authenticated:
@@ -126,7 +115,7 @@ def delete_folder(request,pk):
         return redirect('home')
 
 def folder(request,pk):
-    folder = Folder.objects.get(pk=pk,)
+    folder = Folder.objects.get(pk=pk)
     folders = Folder.objects.filter(user=folder.user,parent=folder.name)
     files = File.objects.filter(user=folder.user,parent=folder)
     al = set(chain(folders,files))
@@ -166,20 +155,61 @@ def create_folder(request):
 @login_required
 def uploadFile(request,pk=None):
     if request.method == 'POST':
-        form = FileUploadForm(request.POST,request.FILES)
-        if form.is_valid():
-            file = form.save(commit=False)
-            file.user = request.user
-            if pk != None:
-                file.parent = Folder.objects.get(pk=pk,user=request.user)
-            file.save()
-            messages.success(request,'File is uploaded successfully!')
-            if pk != None:
-                return redirect('folder',pk)
-            return redirect('home')
+        if pk != None:
+            folder = Folder.objects.get(pk=pk)
+            if folder.user == request.user:
+                form = FileUploadForm(request.POST,request.FILES)
+                if form.is_valid():
+                    file = form.save(commit=False)
+                    file.user = request.user
+                    file.parent = folder
+                    file.save()
+                    messages.success(request,'File is uploaded successfully!')
+                    return redirect('folder',pk)
 
+                else:
+                    messages.error(request,'File Uploading has been failed,try again!')
+                    return redirect('folder',pk)
+            else:
+                messages.error(request,'You are not allowed!')
+                return redirect('home')
         else:
-            messages.error(request,'File Uploading has been failed,try again!')
-            if pk != None:
-                return redirect('folder',pk)
+            form = FileUploadForm(request.POST,request.FILES)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.user = request.user
+                file.save()
+                messages.success(request,'File is uploaded successfully!')
+                return redirect('home')
+
+            else:
+                messages.error(request,'File Uploading has been failed,try again!')
+                return redirect('home')
+    else:
+        return redirect('home')
+
+@login_required
+def renameFolder(request,pk):
+    folder = Folder.objects.get(pk=pk)
+    if folder.user == request.user:
+        if request.method == 'POST':
+            name = request.POST['name']
+            if name != '' and name != None:
+                folder.name = name
+                folder.save()
+                messages.success(request,'Folder is renamed successfully!')
+
+            if folder.parent != '' and folder.parent != None:
+                return redirect('folder',Folder.objects.get(name=folder.parent,user=request.user).id)
             return redirect('home')
+        else:
+            return render(request,'renameFolder.html',{'folder':folder})
+    else:
+        messages.error(request,'You are not allowed!')
+        return redirect('home')
+
+def handle404(request,exception):
+    return render(request,'404.html',{})
+
+def handle500(request):
+    return render(request,'500.html',{})
