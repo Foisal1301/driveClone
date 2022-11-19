@@ -8,9 +8,13 @@
         <form method="POST" enctype="multipart/form-data" action="/upload_file/{% if request.resolver_match.url_name != "home" %}{{ folder.pk }}/{% endif %}">
             {% csrf_token %}
             <div class="modal-body">
-                <div class="mb-3">
+                <!--<div class="mb-3">
                     <label for="id_file" class="form-label">Upload Your file</label>
                     <input class="form-control" required type="file" id="id_file" name="file">
+                </div>-->
+                <div class="mb-3">
+                  <label for="id_file" class="form-label">Upload Your files</label>
+                  <input class="form-control" required type="file" id="id_file" multiple name="file">
                 </div>
             </div>
             <div class="modal-footer">

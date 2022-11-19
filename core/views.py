@@ -8,6 +8,7 @@ from django.conf import settings
 import os
 from itertools import chain
 from .forms import FileUploadForm,SignUpForm,PrivacyForm,ChangePass
+from django.core.files.storage import FileSystemStorage
 
 @login_required
 def privacy_settings(request):
@@ -158,33 +159,49 @@ def uploadFile(request,pk=None):
         if pk != None:
             folder = Folder.objects.get(pk=pk)
             if folder.user == request.user:
-                form = FileUploadForm(request.POST,request.FILES)
-                if form.is_valid():
-                    file = form.save(commit=False)
-                    file.user = request.user
-                    file.parent = folder
-                    file.save()
+                try:
+                    files = request.FILES.getlist('file')
+                    for i in files:
+                        File.objects.create(user=request.user,parent = folder,file=i)
                     messages.success(request,'File is uploaded successfully!')
-                    return redirect('folder',pk)
-
-                else:
+                except:
                     messages.error(request,'File Uploading has been failed,try again!')
-                    return redirect('folder',pk)
+                return redirect('folder',pk)
+                # form = FileUploadForm(request.POST,request.FILES)
+                # if form.is_valid():
+                #     file = form.save(commit=False)
+                #     file.user = request.user
+                #     file.parent = folder
+                #     file.save()
+                #     messages.success(request,'File is uploaded successfully!')
+                #     return redirect('folder',pk)
+
+                # else:
+                #     messages.error(request,'File Uploading has been failed,try again!')
+                #     return redirect('folder',pk)
             else:
                 messages.error(request,'You are not allowed!')
                 return redirect('home')
         else:
-            form = FileUploadForm(request.POST,request.FILES)
-            if form.is_valid():
-                file = form.save(commit=False)
-                file.user = request.user
-                file.save()
+            try:
+                files = request.FILES.getlist('file')
+                for i in files:
+                    File.objects.create(user=request.user,file=i)
                 messages.success(request,'File is uploaded successfully!')
-                return redirect('home')
-
-            else:
+            except:
                 messages.error(request,'File Uploading has been failed,try again!')
-                return redirect('home')
+            return redirect('home')
+            # form = FileUploadForm(request.POST,request.FILES)
+            # if form.is_valid():
+            #     file = form.save(commit=False)
+            #     file.user = request.user
+            #     file.save()
+            #     messages.success(request,'File is uploaded successfully!')
+            #     return redirect('home')
+
+            # else:
+            #     messages.error(request,'File Uploading has been failed,try again!')
+            #     return redirect('home')
     else:
         return redirect('home')
 
