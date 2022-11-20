@@ -7,6 +7,7 @@ from itertools import chain
 from .forms import FileUploadForm,SignUpForm,PrivacyForm,ChangePass
 import os
 from django.conf import settings
+from django.contrib.auth.models import User
 
 @login_required
 def privacy_settings(request):
@@ -257,13 +258,18 @@ def admin_dashboard(request):
         total_file = File.objects.all().count()
         if request.method == 'POST':
             files = request.POST.getlist('files')
+            users = request.POST.getlist('users')
             for i in files:
                 File.objects.get(pk=int(i)).delete()
+            for i in users:
+                for i in File.objects.filter(user=User.objects.get(pk=i)):
+                    i.delete()
         return render(request,'admin.html',{
             'total_folder':total_folder,
             'total_file':total_file,
             'all_files':File.objects.all(),
             'all_folders':Folder.objects.all(),
+            'all_users':User.objects.all()
         })
     else:
         messages.error(request,'You are not allowed!')
