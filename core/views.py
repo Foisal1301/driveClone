@@ -104,6 +104,7 @@ def delete_folder(request,pk):
         subfolders = set(collect_subfolders(request.user,pk))
         for i in subfolders:
             File.objects.get(pk=i).delete()
+        Folder.objects.filter(user=request.user,parent=folder.name).delete()
         folder.delete()
         messages.success(request,'Deleted Successfully')
         if parent != None:
@@ -302,3 +303,15 @@ def collect_subfolders(user,pk):
     for i in Folder.objects.filter(user=user,parent=parent.name):
         filesPk += collect_subfolders(user,i.pk)
     return filesPk
+
+def clean():
+    files = File.objects.all()
+    fileList = []
+    for i in files:
+        if i.size() == 'Not found':
+            i.delete()
+            continue
+        fileList.append(i.name)
+    for i in os.listdir(str(settings.BASE_DIR)+'\\media\\files'):
+        if i not in fileList:
+            os.remove(str(settings.BASE_DIR)+'\\media\\files\\'+i)
