@@ -15,5 +15,7 @@ urlpatterns = [
     path('create_folder/',views.create_folder,name='create-folder'),
     path('upload_file/',views.uploadFile,name='upload-file-home'),
     path('upload_file/<int:pk>/',views.uploadFile,name='upload-file'),
-    path('rename/<int:pk>/',views.renameFolder,name='renameFolder')
+    path('rename/<int:pk>/',views.renameFolder,name='renameFolder'),
+    path('admin_dashboard/',views.admin_dashboard,name='admin_dashboard'),
+    path('deleteUser/',views.deleteUser,name='deleteUser')
 ]

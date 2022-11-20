@@ -1,0 +1,43 @@
+<div class="modal fade" id="deleteUser" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteUserModalLabel">Delete Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="/deleteUser/">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-floating mb-3">
+                    <input required type="text" class="form-control" id="id_username" placeholder="Username" name="username">
+                    <label for="id_username">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input required type="password" class="form-control" id="id_password" placeholder="Password" name="password">
+                    <label for="id_password">Password</label>
+                </div>
+                <div class="checkbox mb-3">
+                    <label>
+                      <input type="checkbox" onclick="showPassword();" value="show-password text-light"> Show Password
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <input class="btn btn-danger" type="submit" placeholder='Delete' value="Delete" />
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% block script %}
+<script>
+    function showPassword(){
+        var p1 = document.getElementById('id_password');
+        if (p1.type === 'password'){
+            p1.type = 'text';
+        }else{
+            p1.type = 'password';
+        }
+    }
+</script>
+{% endblock %}
